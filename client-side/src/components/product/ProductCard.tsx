@@ -10,10 +10,10 @@ interface ProductCardProps {
 const ProductCard: FC<ProductCardProps> = ({ product, onAddToCart }) => {
     return (
         <div className="bg-white shadow rounded-md p-4 min-w-50">
-            <img src={product.imageUrl} alt={product.title} className="w-full h-32 object-cover mb-2 rounded-md" />
+            <img src={product.productImg} alt={product.productName} className="w-full h-32 object-cover mb-2 rounded-md" />
             <h3 className="text-lg font-semibold mb-1"><a
-                href={`/products/${product.id}`}>{product.title}</a></h3>
-            <p className="text-gray-600 mb-2">{product.price}Dh</p>
+                href={`/products/${product.produitId}`}>{product.productName}</a></h3>
+            <p className="text-gray-600 mb-2">{product.productPrice}Dh</p>
             <Button text='Panier' onClick={() => onAddToCart(product)} />
         </div>
     );

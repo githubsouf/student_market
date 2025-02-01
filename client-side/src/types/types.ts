@@ -1,14 +1,16 @@
 export interface Products {
-    id: number;
-    title: string;
-    imageUrl: string;
-    price: number;
-    description?: string;
-    rating?: number;
-    reviews?: number;
-    discount?: number;
-    category?: string
+    produitId: number;            // Identifiant unique du produit
+    categories: string;           // Catégorie du produit
+    productImg: string;          // Lien de l'image du produit
+    productName: string;         // Nom du produit
+    productPrice: number;        // Prix du produit
+    baseColor?: string;           // Couleur principale (optionnelle)
+    description: string;          // Description du produit
+    gender: string;               // Genre (Homme, Femme, Unisexe)
+    subCategory?: string;         // Sous-catégorie (optionnelle)
+    vendeurId: number;            // Identifiant du vendeur
 }
+
 
 export interface CartItems {
     product: Products;

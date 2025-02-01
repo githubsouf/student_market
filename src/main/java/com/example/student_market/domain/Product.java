@@ -1,39 +1,58 @@
 package com.example.student_market.domain;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.*;
+import java.util.Set;
+
 @Entity
 @Table(name = "products")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Product {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "product_id")
-    private Long id;
+    private Long produitid;
 
-    private String titre;
+    @Column(nullable = false)
+    private String categories;
+
+    @Column(name = "product_img", nullable = false)
+    private String productImg;
+
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
+    @Column(name = "product_price", nullable = false)
+    private Double productPrice;
+
+    @Column(name = "basecolor")
+    private String baseColor;
+
+    @Column(nullable = false)
     private String description;
-    private float prix;
-    private LocalDateTime addDate;
-    private int stock;
-    private String state;
 
-    // images stored as JSON =>
-    // In JPA, you might store them as a String or a JSON type
-    // depending on your DB. Or create a separate table for them.
-    @Column(columnDefinition = "TEXT")
-    private String images;
+    @Column(nullable = false)
+    private String gender;
 
-    @ManyToOne
-    @JoinColumn(name = "categorie_id")
-    private Category category;
+    @Column(name = "subcategory")
+    private String subCategory;
+
+    @Column(name = "vendeurid")
+    private Long vendeurId;
 
     // Relationship with Commentaire:
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Commentaire> commentaires = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private Set<Panier> paniers;
+    @OneToMany(mappedBy = "product")
+    private Set<CommandeLine> commandeLines;
 
 }

@@ -1,23 +1,29 @@
 package com.example.student_market.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "panier")
 public class Panier {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "panier_id")
-    private Long id;
-
+    @EmbeddedId
+    private UserProductKey id = new UserProductKey();
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @MapsId("user_id")
+    @JoinColumn(name = "user_id", nullable = true) // Peut être NULL
     private User user;
+    @ManyToOne
+    @MapsId("produitid")
+    @JoinColumn(name = "product_id")
+    private Product product;
 
-    @OneToMany(mappedBy = "panier", cascade = CascadeType.ALL)
-    private List<CollectProducts> collectProducts = new ArrayList<>();
-
+    private int quantity;
 }

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,5 +36,8 @@ public class User {
     private LocalDateTime resetAt;
     private String avatar;
     private String role;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Panier> paniers;
 }
 

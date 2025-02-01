@@ -1,37 +1,32 @@
 package com.example.student_market.domain;
 
+
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "commande_line")
 public class CommandeLine {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "commande_id")
-    private Long id;
-
-    private LocalDateTime dateCommande;
-    private String state;
-
-
+    @EmbeddedId
+    private CommandeProductKey id = new CommandeProductKey();
     @ManyToOne
-    @JoinColumn(name = "client_id")
-    private Client client;
-
+    @MapsId("commande_id")
+    @JoinColumn(name = "commande_id", nullable = true) // Peut être NULL
+    private Commande commande;
     @ManyToOne
-    @JoinColumn(name = "mode_paiement_id")
-    private ModePaiement modePaiement;
-
-    @OneToOne(mappedBy = "commandeLine", cascade = CascadeType.ALL)
-    private Facture facture;
-
-    @OneToOne
-    @JoinColumn(name = "livraison_id")
-    private Livraisons livraisons;
-
+    @MapsId("produitid")
+    @JoinColumn(name = "produitid")
+    private Product product;
+    private int quantity;
 
 }
+

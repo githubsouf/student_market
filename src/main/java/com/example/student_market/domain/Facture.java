@@ -20,6 +20,6 @@ public class Facture {
 
     @OneToOne
     @JoinColumn(name = "commande_id")
-    private CommandeLine commandeLine;
+    private Commande commande;
 
 }

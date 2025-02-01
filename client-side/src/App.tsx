@@ -7,6 +7,8 @@ import ProductDetailsPage from './pages/ProductDetailsPage';
 import CategoryPage from './pages/CategoryPage';
 import ConversationPage from './pages/ConversationPage';
 import HomePage from "./pages/HomePage";
+import ProductListWithPagination from "./pages/ProductListWithPagination.tsx";
+
 
 const App: FC = () => {
     return (
@@ -15,9 +17,10 @@ const App: FC = () => {
                 <Header />
                 <main className="flex-grow p-4 justify-center items-center">  {/* Suppression de container mx-auto */}
                     <Routes>
+                        <Route path="/test" element={<ProductListWithPagination/>}/>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/products/:id" element={<ProductDetailsPage />} />
-                        <Route path="/category" element={<CategoryPage />} />
+                        <Route path="/category/:category" element={<CategoryPage />} />
                         <Route path="/cart" element={<CartPage />} />
                         <Route path="/conversations" element={<ConversationPage />} />
                     </Routes>

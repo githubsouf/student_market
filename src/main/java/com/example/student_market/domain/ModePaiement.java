@@ -17,6 +17,6 @@ public class ModePaiement {
 
 
     @OneToMany(mappedBy = "modePaiement")
-    private List<CommandeLine> commandeLines = new ArrayList<>();
+    private List<Commande> commande = new ArrayList<>();
 
 }
