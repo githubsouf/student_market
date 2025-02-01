@@ -4,14 +4,12 @@ import ProductCard from "./ProductCard";
 
 interface ProductListProps {
     products: Products[];
-    onAddToCart: (product: Products) => void;
     count: number;
     title: string;
 }
 
 const ProductList: FC<ProductListProps> = ({
                                                products,
-                                               onAddToCart,
                                                 title,count
                                            }) => {
     return (
@@ -26,7 +24,7 @@ const ProductList: FC<ProductListProps> = ({
             {/* Liste des produits */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 pt-12">
                 {products.slice(0, count).map((product) => (
-                    <ProductCard key={product.produitId} product={product} onAddToCart={onAddToCart} />
+                    <ProductCard key={product.produitId} product={product} />
                 ))}
             </div>
         </div>

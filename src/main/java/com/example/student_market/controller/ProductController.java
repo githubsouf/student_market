@@ -53,6 +53,11 @@ public class ProductController {
             return productService.getAllProducts(null, page, size);
     }
 
+    @GetMapping("/search")
+    public List<ProductDTO> searchProducts(@RequestParam String query) {
+        return productService.searchProducts(query);
+    }
+
 //    @GetMapping(value = "/page", produces = MediaType.APPLICATION_XML_VALUE)
 //    public ProductPageResponseDTO testVali(@RequestParam(defaultValue = "0") int page,
 //                                           @RequestParam(defaultValue = "5") int size){

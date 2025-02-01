@@ -1,7 +1,7 @@
-import { FC } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { CartItems } from '../../types/types';
 import Button from '../common/Button';
-
+import { isAuthenticated } from '../../data/cart';
 
 interface CartSummaryProps {
     items: CartItems[];
@@ -9,8 +9,16 @@ interface CartSummaryProps {
 }
 
 const CartSummary: FC<CartSummaryProps> = ({ items, onCheckout }) => {
+    const [auth, setAuth] = useState<boolean>(false);
 
-    const totalPrice = items.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+    useEffect(() => {
+        const checkAuth = async () => {
+            setAuth(await isAuthenticated());
+        };
+        checkAuth();
+    }, []);
+
+    const totalPrice = items.reduce((total, item) => total + item.product.productPrice * item.quantity, 0);
 
     return (
         <div className="bg-white p-4 shadow rounded-md">
@@ -19,7 +27,11 @@ const CartSummary: FC<CartSummaryProps> = ({ items, onCheckout }) => {
                 <span>Total:</span>
                 <span>{totalPrice}Dh</span>
             </div>
-            <Button text='Commander' onClick={onCheckout} />
+            {auth ? (
+                <Button text="Commander" onClick={onCheckout} />
+            ) : (
+                <p className="text-red-500">Connectez-vous pour finaliser la commande</p>
+            )}
         </div>
     );
 };

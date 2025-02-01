@@ -1,13 +1,22 @@
-import { FC } from 'react';
+import {FC, useState} from 'react';
 import { Products } from '../../types/types';
 import Button from '../common/Button';
+import {addToCart} from "../../data/cart.ts";
 
 interface ProductDetailsProps {
     product: Products;
-    onAddToCart: (product: Products) => void;
 }
 
-const ProductDetails: FC<ProductDetailsProps> = ({ product, onAddToCart }) => {
+const ProductDetails: FC<ProductDetailsProps> = ({ product}) => {
+
+    const [message, setMessage] = useState('');
+
+    const handleAddToCart = async () => {
+        await addToCart(product);
+        setMessage('Produit ajouté au panier !');
+        setTimeout(() => setMessage(''), 2000);
+    };
+
     return (
         <div className="bg-white rounded-md mt-2 ml-20 mr-20 p-10 justify-center item-center">
             <div className='flex gap-10'>
@@ -35,7 +44,8 @@ const ProductDetails: FC<ProductDetailsProps> = ({ product, onAddToCart }) => {
                     {
                         <p className="text-red-500 text-md font-bold mb-2">25% reduction</p>
                     }
-                    <Button text='Panier' onClick={() => onAddToCart(product)}/>
+                    <Button text='Panier' onClick={handleAddToCart}/>
+                    {message && <p className="text-green-500">{message}</p>}
                 </div>
             </div>
         </div>

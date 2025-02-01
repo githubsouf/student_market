@@ -21,18 +21,13 @@ const CategoryPage: FC = () => {
 
     // 🔹 Assurer que `data.products` est toujours un tableau
     const products: Products[] = data?.products ?? [];
-    // 🔹 Gérer les filtres
-    const [cart, setCart] = useState<Products[]>([]);
+
     const [filteredProducts, setFilteredProducts] = useState(products);
     console.log(filteredProducts)
     if (isLoading) return <p>Chargement...</p>;
     if (isError) return <p>Erreur lors du chargement des produits.</p>;
 
 
-    const handleAddToCart = (product: Products) => {
-        setCart([...cart, product]);
-        alert(`${product.productName} ajouté au panier`);
-    };
 
     const handleFilterSelect = (selectedFilters: string[]) => {
         console.log("products")
@@ -58,7 +53,7 @@ const CategoryPage: FC = () => {
 
             {/* 🔹 Liste des produits */}
             <div>
-                <ProductList count={6} title={"BEST SELLERS"} products={filteredProducts?products:filteredProducts} onAddToCart={handleAddToCart} />
+                <ProductList count={6} title={"BEST SELLERS"} products={filteredProducts?products:filteredProducts} />
             </div>
         </div>
     );

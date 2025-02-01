@@ -1,43 +1,26 @@
-// src/pages/ProductDetailsPage.tsx
-import  { FC, useState } from 'react';
+import { FC } from 'react';
 import { useParams } from 'react-router';
 import ProductDetails from '../components/product/ProductDetails';
-import { Products } from '../types/types';
+import { useQuery } from '@tanstack/react-query';
+import { getProductById } from '../data/products';
 import ProductListPage from "./ProductListPage.tsx";
-import {useQuery} from "@tanstack/react-query";
-import {fetchProducts} from "../data/products.ts";
 
 const ProductDetailsPage: FC = () => {
-    const { id } = useParams();
-    const [cart, setCart] = useState<Products[]>([])
+    const { id } = useParams(); // Récupérer l'ID du produit depuis l'URL
 
-    const [page] = useState(0);
-    const size = 10; // Nombre d'éléments par page
-
-    // Récupérer les données paginées avec React Query
-    const { data, isLoading, isError } = useQuery({
-        queryKey: ["products", page],
-        queryFn: () => fetchProducts(page, size),
+    const { data: product, isLoading, isError } = useQuery({
+        queryKey: ['product', id],
+        queryFn: () => getProductById(Number(id)), // Utiliser getProductById pour récupérer les données
+        enabled: !!id, // Ne pas faire la requête si l'ID n'est pas défini
     });
 
     if (isLoading) return <p>Chargement...</p>;
-    if (isError) return <p>Erreur lors du chargement des produits.</p>;
-
-    const product = data?.products.find((p) => p.produitId === Number(id));
-
-    const handleAddToCart = (product: Products) => {
-        setCart([...cart, product])
-        alert(`${product.productName} ajouté au panier`)
-    }
-
-    if(!product) {
-        return <p>Produit introuvable</p>
-    }
+    if (isError || !product) return <p>Erreur lors du chargement du produit ou produit introuvable.</p>;
 
     return (
         <div className="flex gap-10 flex-wrap justify-center">
             <div className="w-3/4">
-                <ProductDetails product={product} onAddToCart={handleAddToCart}/>
+                <ProductDetails product={product}/>
             </div>
             <div>
                 <ProductListPage />
@@ -45,7 +28,6 @@ const ProductDetailsPage: FC = () => {
                 <ProductListPage />
             </div>
         </div>
-
     );
 };
 

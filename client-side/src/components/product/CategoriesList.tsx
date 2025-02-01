@@ -14,7 +14,6 @@ const CategoriesList: FC<CategoriesListProps> = ({ categories }) => {
                     key={category.id}
                     logo={category.icon}  // Passe le nom de l'icône comme chaîne
                     name={category.title}
-                    onClick={() => alert(`Vous avez cliqué sur ${category.title}`)}
                 />
             ))}
         </div>

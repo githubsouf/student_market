@@ -26,7 +26,7 @@ const Filter: FC<FilterProps> = ({ filters, onFilterSelect }) => {
         <div className="relative bg-white shadow-md rounded-md p-4 w-64">
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="w-full text-left p-2 bg-gray-200 hover:bg-gray-300 rounded-md font-semibold"
+                className="w-full text-left text-white p-2 bg-gray-200 hover:bg-gray-300 rounded-md font-semibold"
             >
                 Sélectionner des filtres ▾
             </button>

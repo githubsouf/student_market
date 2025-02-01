@@ -62,6 +62,11 @@ public class ProductService {
         return new PageImpl<>(productDTOList, pageable, products.getTotalElements());
     }
 
+    public List<ProductDTO> searchProducts(String query) {
+        return productRepository.findByProductNameContainingOrCategoriesContainingOrSubCategoryContaining(query, query, query)
+                .stream().map(this::convertProductToProductDTO).collect(Collectors.toList());
+    }
+
     private ProductDTO convertProductToProductDTO(Product product) {
         return ProductDTO.builder()
                 .vendeurId(product.getVendeurId())

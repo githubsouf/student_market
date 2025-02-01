@@ -5,9 +5,9 @@ import Footer from './components/layout/Footer';
 import CartPage from './pages/CartPage';
 import ProductDetailsPage from './pages/ProductDetailsPage';
 import CategoryPage from './pages/CategoryPage';
-import ConversationPage from './pages/ConversationPage';
 import HomePage from "./pages/HomePage";
 import ProductListWithPagination from "./pages/ProductListWithPagination.tsx";
+import ForumPage from "./pages/ForumPage.tsx";
 
 
 const App: FC = () => {
@@ -22,7 +22,7 @@ const App: FC = () => {
                         <Route path="/products/:id" element={<ProductDetailsPage />} />
                         <Route path="/category/:category" element={<CategoryPage />} />
                         <Route path="/cart" element={<CartPage />} />
-                        <Route path="/conversations" element={<ConversationPage />} />
+                        <Route path="/conversations" element={<ForumPage />} />
                     </Routes>
                 </main>
                 <Footer />

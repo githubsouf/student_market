@@ -17,6 +17,23 @@ export interface CartItems {
     quantity: number;
 }
 
+export interface User {
+    id: number;
+    username: string;
+    avatar: string;  // URL de l'avatar
+}
+
+export interface ForumMessage {
+    id: number;
+    contenu: string;
+    sendDate: Date;
+    me: boolean;
+    deleted: boolean;
+    user: User;
+    parentMessageId?: number;
+    replies?: ForumMessage[];
+}
+
 export interface Conversations {
     id: number;
     title: string;
