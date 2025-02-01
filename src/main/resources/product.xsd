@@ -1,0 +1,31 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://www.example.com/student_market"
+           targetNamespace="http://www.example.com/student_market"
+           elementFormDefault="qualified">
+
+    <xs:element name="ProductRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long" minOccurs="0"/>
+                <xs:element name="titre" type="xs:string"/>
+                <xs:element name="description" type="xs:string"/>
+                <xs:element name="prix" type="xs:float"/>
+                <xs:element name="addDate" type="xs:dateTime"/>
+                <xs:element name="stock" type="xs:int"/>
+                <xs:element name="state" type="xs:string"/>
+                <xs:element name="images" type="xs:string"/>
+                <xs:element name="categoryId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="ProductResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="message" type="xs:string"/>
+                <xs:element name="productId" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

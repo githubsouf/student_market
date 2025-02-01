@@ -1,35 +1,75 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Marketplace from "./pages/Marketplace";
+import Dashboard from "./pages/Dashboard";
+import Footer from "./components/Footer";
+import AuthModal from "./components/AuthModal";
+import { logout } from "./services/authService";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [username, setUsername] = useState("");
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    // Check login state on load
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const storedUsername = localStorage.getItem("username");
+
+        if (token && storedUsername) {
+            setIsLoggedIn(true);
+            setUsername(storedUsername);
+        }
+    }, []);
+
+    const handleOpenAuthModal = () => {
+        setIsAuthModalOpen(true);
+    };
+
+    const handleCloseAuthModal = () => {
+        setIsAuthModalOpen(false);
+    };
+
+    const handleLogout = () => {
+        logout();
+        setIsLoggedIn(false);
+        setUsername("");
+        window.location.href = "/"; // Redirect to homepage
+    };
+
+    return (
+        <Router>
+            <div className="min-h-screen flex flex-col">
+                <Navbar
+                    isLoggedIn={isLoggedIn}
+                    username={username}
+                    onAuthClick={handleOpenAuthModal}
+                    onLogout={() => {
+                        setIsLoggedIn(false);
+                        setUsername("");
+                    }}
+                />
+                <main className="flex-grow">
+                    <Routes>
+                        <Route path="/" element={<Marketplace />} />
+                        <Route
+                            path="/dashboard"
+                            element={isLoggedIn ? <Dashboard /> : <Navigate to="/" />}
+                        />
+                    </Routes>
+                </main>
+                <Footer />
+                <AuthModal
+                    isOpen={isAuthModalOpen}
+                    onClose={handleCloseAuthModal}
+                    onLoginSuccess={(username) => {
+                        setIsLoggedIn(true);
+                        setUsername(username);
+                    }}
+                />            </div>
+        </Router>
+    );
 }
 
-export default App
+export default App;

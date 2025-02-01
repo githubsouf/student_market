@@ -7,6 +7,16 @@ public class UserDTO {
     private String firstname;
     private String lastname;
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String role;
+
     // Getters and setters
     public String getUsername() {
         return username;
@@ -48,3 +58,4 @@ public class UserDTO {
         this.lastname = lastname;
     }
 }
+

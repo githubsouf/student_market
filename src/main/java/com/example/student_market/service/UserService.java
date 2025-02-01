@@ -58,8 +58,7 @@ public class UserService {
         user.setEmail(userDTO.getEmail());
         user.setFirstname(userDTO.getFirstname());
         user.setLastname(userDTO.getLastname());
-        user.setRole("USER");
-
+        user.setRole(userDTO.getRole());
         User savedUser = userRepository.save(user);
 
         try {
@@ -112,16 +111,27 @@ public class UserService {
     public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
-
     /**
      * Delete a user by their ID.
      *
      * @param id The ID of the user.
      */
-    public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+    public boolean deleteUser(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
-
+    public User updateUser(Long id, User userDetails) {
+        return userRepository.findById(id).map(user -> {
+            user.setUsername(userDetails.getUsername());
+            user.setEmail(userDetails.getEmail());
+            user.setFirstname(userDetails.getFirstname());
+            user.setLastname(userDetails.getLastname());
+            user.setRole(userDetails.getRole());
+            return userRepository.save(user);
+        }).orElse(null);}
     /**
      * Retrieve a user by their username.
      *
