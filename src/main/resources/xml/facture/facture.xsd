@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="orderData">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="user" type="xs:string"/>
+                <xs:element name="paymentType" type="xs:string"/>
+                <xs:element name="cardNumber" type="xs:string" minOccurs="0"/>
+                <xs:element name="expiryDate" type="xs:string" minOccurs="0"/>
+                <xs:element name="address" type="xs:string"/>
+                <xs:element name="totalPrice" type="xs:decimal"/> <!-- Ajout du total -->
+                <xs:element name="cartItem" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="product">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="produitId" type="xs:integer"/>
+                                        <xs:element name="categories" type="xs:string"/>
+                                        <xs:element name="productImg" type="xs:string"/>
+                                        <xs:element name="productName" type="xs:string"/>
+                                        <xs:element name="productPrice" type="xs:decimal"/>
+                                        <xs:element name="baseColor" type="xs:string"/>
+                                        <xs:element name="description" type="xs:string"/>
+                                        <xs:element name="gender" type="xs:string"/>
+                                        <xs:element name="subCategory" type="xs:string"/>
+                                        <xs:element name="vendeurId" type="xs:integer"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="quantity" type="xs:integer"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

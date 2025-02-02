@@ -1,45 +1,47 @@
-// src/utils/cart.ts
 import axios from 'axios';
 import { CartItems, Products } from '../types/types';
 
 const CART_KEY = 'cart_items';
+const BASE_URL = 'http://localhost:8088/api/panier';
 
-// Vérifier si l'utilisateur est authentifié
-export const isAuthenticated = async (): Promise<boolean> => {
-    try {
-        const response = await axios.get('http://localhost:8088/api/auth/me');
-        return response.status === 200;
-    } catch {
-        return false;
-    }
+// Fonction pour récupérer le token
+const getAuthHeaders = () => {
+    const token = localStorage.getItem('token');
+    return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+export const isAuthenticated = (): boolean => {
+    const token = localStorage.getItem("token");
+    const storedUsername = localStorage.getItem("username");
+    return !!(token && storedUsername);
 };
 
 // Ajouter un produit au panier
 export const addToCart = async (product: Products) => {
-    const authenticated = await isAuthenticated();
+    const authenticated = isAuthenticated();
+    const userId = localStorage.getItem('userId'); // Get userId from local storage
 
-    if (authenticated) {
-        await axios.post('http://localhost:8088/api/cart', { productId: product.produitId, quantity: 1 });
+    if (authenticated && userId) {
+        await axios.post(BASE_URL+'/add', { userId:userId, productId: product.produitId, quantity: 1 }, { headers: getAuthHeaders() });
     } else {
         let cart: CartItems[] = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
         const existingItem = cart.find(item => item.product.produitId === product.produitId);
-
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
             cart.push({ product, quantity: 1 });
         }
-
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
     }
 };
 
 // Récupérer le panier
 export const getCart = async (): Promise<CartItems[]> => {
-    const authenticated = await isAuthenticated();
+    const authenticated = isAuthenticated();
+    const userId = localStorage.getItem('userId');
 
-    if (authenticated) {
-        const response = await axios.get('http://localhost:8088/api/cart');
+    if (authenticated && userId) {
+        const response = await axios.get(`${BASE_URL}/${userId}`, { headers: getAuthHeaders() });
         return response.data;
     } else {
         return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
@@ -48,10 +50,12 @@ export const getCart = async (): Promise<CartItems[]> => {
 
 // Supprimer un produit du panier
 export const removeFromCart = async (productId: number) => {
-    const authenticated = await isAuthenticated();
+    const authenticated = isAuthenticated();
+    const userId = localStorage.getItem('userId');
 
-    if (authenticated) {
-        await axios.delete(`http://localhost:8088/api/cart/${productId}`);
+
+    if (authenticated && userId) {
+        await axios.delete(`${BASE_URL}/remove?productId=${productId}&userId=${userId}`, { headers: getAuthHeaders() });
     } else {
         let cart: CartItems[] = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
         cart = cart.filter(item => item.product.produitId !== productId);
@@ -61,20 +65,17 @@ export const removeFromCart = async (productId: number) => {
 
 // Vider le panier après commande
 export const clearCart = async () => {
-    const authenticated = await isAuthenticated();
+    const authenticated = isAuthenticated();
+    const userId = localStorage.getItem('userId');
 
-    if (authenticated) {
-        await axios.delete('http://localhost:8088/api/cart');
+    if (authenticated && userId) {
+        await axios.delete(`${BASE_URL}/clear/${userId}`, { headers: getAuthHeaders() });
     }
-
     localStorage.removeItem(CART_KEY);
 };
 
 // Fonction pour récupérer le nombre total d'articles dans le panier
 export const getCartItemCount = (): number => {
-    // Récupérer le panier depuis le localStorage (ou un state global type Redux/Zustand)
     const cart = JSON.parse(localStorage.getItem(CART_KEY) || "[]");
-
-    // Compter le nombre total d'articles
     return cart.reduce((total: number, item: { quantity: number }) => total + item.quantity, 0);
 };

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/panier")
@@ -15,7 +16,10 @@ public class PanierController {
     private PanierService panierService;
 
     @PostMapping("/add")
-    public Panier addToPanier(@RequestParam Long userId, @RequestParam Long productId, @RequestParam int quantity) {
+    public Panier addToPanier(@RequestBody Map<String, Object> request) {
+        Long userId = ((Number) request.get("userId")).longValue();
+        Long productId = ((Number) request.get("productId")).longValue();
+        int quantity = (int) request.get("quantity");
         return panierService.addToPanier(userId, productId, quantity);
     }
 
@@ -39,4 +43,3 @@ public class PanierController {
         panierService.clearPanier(userId);
     }
 }
-

@@ -2,6 +2,7 @@ package com.example.student_market.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.xml.sax.SAXException;
 import javax.xml.XMLConstants;
 import javax.xml.transform.Source;
@@ -17,22 +18,24 @@ import java.util.Objects;
 
 public class XmlValidator {
     private static final Logger logger = LoggerFactory.getLogger(XmlValidator.class);
+//    @Value("${facture.xml.path}")
+    private static final String xmlPath = "xml/facture/facture.xml";
 
-    public boolean validate(String xmlPath, String xsdPath) {
+    public static boolean validate(String xmlObject, String xsdPath) {
         try {
+            System.out.println(xmlObject);
+            createXmlFile(xmlObject, xmlPath);
+            System.out.println("Hello, c'est SYLLA");
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            URL xsdURL = Objects.requireNonNull(getClass().getClassLoader().getResource(xsdPath));
-            System.out.println("Helloooo");
+            URL xsdURL = Objects.requireNonNull(XmlValidator.class.getClassLoader().getResource(xsdPath));
             Schema schema = factory.newSchema(new File(xsdURL.getFile()));
-            System.out.println("Helloooo");
             Validator validator = schema.newValidator();
-            URL xmlURL = Objects.requireNonNull(getClass().getClassLoader().getResource(xmlPath));
+            URL xmlURL = Objects.requireNonNull(XmlValidator.class.getClassLoader().getResource(xmlPath));
             Source source = new StreamSource(new File(xmlURL.getFile()));
-            System.out.println("Helloooo");
             validator.validate(source);
+            deleteXmlFile(xmlPath);
             logger.info("Validation réussie : le document XML est valide.");
             return true;
-
 
         } catch (SAXException e) {
             logger.error("Erreur de validation XML : {}", e.getMessage());
@@ -48,17 +51,36 @@ public class XmlValidator {
         }
     }
 
-//    public static void main(String[] args) {
-//        XmlValidator validator = new XmlValidator();
-//        String xmlFile = "xml/products.xml";
-//        String xsdFile = "xml/product.xsd";
-//
-//        boolean isValid = validator.validate(xmlFile, xsdFile);
-//        if (isValid) {
-//            System.out.println("Le document XML est valide.");
-//        } else {
-//            System.out.println("Le document XML n'est pas valide.");
-//        }
-//    }
+    private static void deleteXmlFile(String filePath) {
+        try {
+            java.io.File file = new java.io.File(XmlValidator.class.getClassLoader().getResource(".").getFile() + filePath);
+            if (file.delete()) {
+                System.out.println(filePath + " supprimé avec succès.");
+            } else {
+                System.out.println("Impossible de supprimer le fichier " + filePath);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private static void createXmlFile(String xml, String filePath) {
+        try {
+            String basePath = XmlValidator.class.getClassLoader().getResource(".").getFile();
+            java.io.File file = new java.io.File(basePath + filePath);
+            java.io.File parentDir = file.getParentFile();
+            if (parentDir != null && !parentDir.exists()) {
+                System.out.println("Le fichier parent n'existe pas");
+                parentDir.mkdirs();
+            }
+            java.io.BufferedWriter writer = new java.io.BufferedWriter(new java.io.FileWriter(file));
+            writer.write(xml);
+            writer.close();
+            System.out.println("Créé avec succès : " + file.getAbsolutePath());
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Products } from '../types/types';
+export const BASE_URL = 'http://localhost:8088';
 export const API_URL = 'http://localhost:8088/api/products';
 export const CATGORY_PATH = API_URL+'/category';
 

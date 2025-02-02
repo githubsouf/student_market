@@ -1,22 +1,15 @@
-import { FC, useState, useEffect } from 'react';
+import { FC } from 'react';
 import { CartItems } from '../../types/types';
 import Button from '../common/Button';
-import { isAuthenticated } from '../../data/cart';
 
 interface CartSummaryProps {
     items: CartItems[];
-    onCheckout: () => void;
+    onCheckout: () => void; // onCheckout est maintenant une fonction (callback)
+    isLoggedIn : boolean;
 }
 
-const CartSummary: FC<CartSummaryProps> = ({ items, onCheckout }) => {
-    const [auth, setAuth] = useState<boolean>(false);
+const CartSummary: FC<CartSummaryProps> = ({ items, onCheckout, isLoggedIn }) => {
 
-    useEffect(() => {
-        const checkAuth = async () => {
-            setAuth(await isAuthenticated());
-        };
-        checkAuth();
-    }, []);
 
     const totalPrice = items.reduce((total, item) => total + item.product.productPrice * item.quantity, 0);
 
@@ -27,7 +20,7 @@ const CartSummary: FC<CartSummaryProps> = ({ items, onCheckout }) => {
                 <span>Total:</span>
                 <span>{totalPrice}Dh</span>
             </div>
-            {auth ? (
+            {isLoggedIn ? (
                 <Button text="Commander" onClick={onCheckout} />
             ) : (
                 <p className="text-red-500">Connectez-vous pour finaliser la commande</p>

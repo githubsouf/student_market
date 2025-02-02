@@ -1,20 +1,18 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { CartItems } from '../../types/types';
 import { removeFromCart } from '../../data/cart'; // Méthode pour supprimer l'élément du panier
 
 interface CartItemProps {
     item: CartItems;
     onRemove: (productId: number) => void;
+    removing : boolean;
 }
 
-const CartItem: FC<CartItemProps> = ({ item, onRemove }) => {
-    const [isRemoving, setIsRemoving] = useState(false); // État pour gérer la suppression
+const CartItem: FC<CartItemProps> = ({ item, onRemove , removing }) => {
 
     const handleRemove = async () => {
-        setIsRemoving(true); // Démarrer la suppression
-        await removeFromCart(item.product.produitId); // Supprimer l'article via la méthode asynchrone
-        onRemove(item.product.produitId); // Mettre à jour le panier
-        setIsRemoving(false); // Fin de la suppression
+        await removeFromCart(item.product.produitId);
+        onRemove(item.product.produitId);
     };
 
     return (
@@ -26,10 +24,10 @@ const CartItem: FC<CartItemProps> = ({ item, onRemove }) => {
             <span className="px-2">{item.quantity} x {item.product.productPrice}Dh</span>
             <button
                 onClick={handleRemove}
-                className={`text-red-500 hover:text-red-700 ${isRemoving ? 'cursor-not-allowed' : ''}`}
-                disabled={isRemoving}
+                className={`text-red-500 hover:text-red-700 ${removing ? 'cursor-not-allowed' : ''}`}
+                disabled={removing}
             >
-                {isRemoving ? 'Suppression en cours...' : 'Supprimer'}
+                {removing ? 'Suppression en cours...' : 'Supprimer'}
             </button>
         </li>
     );

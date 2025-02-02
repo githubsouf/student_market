@@ -8,15 +8,11 @@ interface FilterProps {
 const Filter: FC<FilterProps> = ({ filters, onFilterSelect }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
-
-    // Gérer la sélection/désélection des filtres
     const toggleFilter = (filter: string) => {
         setSelectedFilters(prev =>
             prev.includes(filter) ? prev.filter(f => f !== filter) : [...prev, filter]
         );
     };
-
-    // Appliquer les filtres sélectionnés
     const applyFilters = () => {
         onFilterSelect(selectedFilters);
         setIsOpen(false); // Fermer le menu après application

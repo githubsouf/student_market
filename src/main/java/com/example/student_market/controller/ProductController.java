@@ -1,12 +1,10 @@
 package com.example.student_market.controller;
 
-import com.example.student_market.config.XmlManip;
 import com.example.student_market.domain.Product;
 import com.example.student_market.dto.ProductDTO;
 import com.example.student_market.dto.ProductPageResponseDTO;
 import com.example.student_market.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +18,6 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
-
-//    @GetMapping( produces = MediaType.APPLICATION_XML_VALUE)
-//    public List<Product> getAllProducts() {
-//        return productService.getAllProducts();
-//    }
 
     @GetMapping("/{id}")
     public Optional<ProductDTO> getProductById(@PathVariable Long id) {
@@ -58,9 +51,4 @@ public class ProductController {
         return productService.searchProducts(query);
     }
 
-//    @GetMapping(value = "/page", produces = MediaType.APPLICATION_XML_VALUE)
-//    public ProductPageResponseDTO testVali(@RequestParam(defaultValue = "0") int page,
-//                                           @RequestParam(defaultValue = "5") int size){
-//        return productService.getAllProducts(page, size);
-//    }
 }

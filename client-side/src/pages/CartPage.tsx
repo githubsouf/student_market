@@ -3,11 +3,15 @@ import CartList from '../components/cart/CartList';
 import CartSummary from '../components/cart/CartSummary';
 import { CartItems } from '../types/types';
 import Payment from '../components/ui/Payment';
-import { getCart, removeFromCart, clearCart } from '../data/cart';
+import {getCart, clearCart, removeFromCart} from '../data/cart';
 
-const CartPage: FC = () => {
+type CartPageProps = {
+    isLoggedIn: boolean;
+};
+const CartPage: FC<CartPageProps> = ({ isLoggedIn }) => {
     const [items, setItems] = useState<CartItems[]>([]);
-    const [showPayment, setShowPayment] = useState<boolean>(false);
+    const [showPayment, setShowPayment] = useState(false);
+    const [removingItemId, setRemovingItemId] = useState<number | null>(null); // track of the current item being deleted
 
     useEffect(() => {
         const fetchCart = async () => {
@@ -18,29 +22,40 @@ const CartPage: FC = () => {
     }, []);
 
     const handleRemoveFromCart = async (productId: number) => {
-        await removeFromCart(productId);
+        setRemovingItemId(productId); // Démarrer la suppression
         setItems(items.filter(item => item.product.produitId !== productId));
+        await  removeFromCart(productId);
+        setRemovingItemId(null);
     };
 
-    const handleCheckout = async () => {
-        setShowPayment(true);
+    const handleCheckout =  () => {
+        if (isLoggedIn){
+            setShowPayment(true);
+        } else {
+            alert('Vous devez être connecté pour finaliser la commande');
+        }
     };
 
     const handlePayment = async () => {
         await clearCart();
         setShowPayment(false);
         setItems([]);
-        alert('Paiement effectué');
+        alert('Nous vous remercions');
     };
+    const totalPrice = items.reduce((total, item) => total + item.product.productPrice * item.quantity, 0);
 
     return (
         <div className="ml-30 mr-30">
             {showPayment ? (
-                <Payment onPayment={handlePayment} />
+                <Payment
+                    totalPrice={totalPrice}
+                    user={localStorage.getItem("username")??""}
+                    cartItems={items}
+                    onPayment={handlePayment} />
             ) : (
                 <>
-                    <CartList items={items} onRemove={handleRemoveFromCart} />
-                    <CartSummary items={items} onCheckout={handleCheckout} />
+                    <CartList items={items} onRemove={handleRemoveFromCart}  removingItemId={removingItemId} />
+                    <CartSummary items={items} onCheckout={handleCheckout} isLoggedIn={isLoggedIn} />
                 </>
             )}
         </div>
